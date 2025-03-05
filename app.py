@@ -113,27 +113,32 @@ def main():
                     fig_cat_dist = px.bar(df, x=selected_categorical_col)
                     st.plotly_chart(fig_cat_dist, use_container_width=True)
                     
-                # Time Series Analysis Section
-                st.subheader("Time Series Analysis")
-                date_cols = [col for col in df.columns if ('date' in col.lower()) and 
-                            (pd.api.types.is_datetime64_dtype(df[col]) or pd.to_numeric(df[col], errors='coerce').notna().all())]
-                
-                if date_cols:
-                    selected_date_col = st.selectbox('Select Date Column:', date_cols)
-                    
-                    # Convert the date column to datetime
-                    try:
-                        df[selected_date_col] = pd.to_datetime(df[selected_date_col])
-                        fig_time_series = px.line(df, x=selected_date_col, 
-                                                y=df.columns.tolist())
-                        st.plotly_chart(fig_time_series, use_container_width=True)
-                    except ValueError:
-                        st.error(f"Could not convert '{selected_date_col}' to datetime. Ensure it is in a proper date format.")
+                # # Time Series Analysis Section
+                # st.subheader("Time Series Analysis")
+                # date_cols = [col for col in df.columns if 'date' in col.lower()]
+                # for col in date_cols:
+                #     df2 = df.dropna(subset=[col])
+                #     df2[col] = pd.to_datetime(df2[col], errors='coerce')
+                #     if df2[col].isnull().any():
+                #         st.warning(f"Column '{col}' contains invalid dates which are set to NaT.")
+                #     df2 = df2.dropna(subset=[col])
+                #     print(df2[col].describe())
+
+                # if date_cols:
+                #     selected_date_col = st.selectbox('Select Date Column:', date_cols)
+
+                #     # Convert the date column to datetime
+                #     try:
+                #         fig_time_series = px.line(df2, x=selected_date_col, 
+                #                                   y=df2.columns.tolist())
+                #         st.plotly_chart(fig_time_series, use_container_width=True)
+                #     except ValueError:
+                #         st.error(f"Could not convert '{selected_date_col}' to datetime. Ensure it is in a proper date format.")
                 
                 # Geographical Data Section
                 st.subheader("Geographical Analysis")
-                if 'latitude' in df.columns and 'longitude' in df.columns:
-                    fig_map = px.scatter_geo(df, lat='latitude', lon='longitude')
+                if 'LAT' in df.columns and 'LON' in df.columns:
+                    fig_map = px.scatter_geo(df, lat='LAT', lon='LON')
                     st.plotly_chart(fig_map, use_container_width=True)
                     
         except Exception as e:
